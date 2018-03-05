@@ -165,30 +165,26 @@ var SearchIndex = window.SearchIndex = (function() {
     return uniques;
   }
 
-  function getIntersection(arrayA, arrayB) {
-    var ai = 0, bi = 0, intersection = [];
-
-    arrayA = arrayA.sort();
-    arrayB = arrayB.sort();
-
-    var lenArrayA = arrayA.length, lenArrayB = arrayB.length;
-
-    while (ai < lenArrayA && bi < lenArrayB) {
-      if (arrayA[ai] < arrayB[bi]) {
-        ai++;
+    /**
+     * See Issue#105 resp. Pullrequest#121 of https://github.com/corejavascript/typeahead.js
+     *
+     * @param array - indeed this should be TWO Arrays!
+     * @returns {Array} of intersections
+     */
+  function getIntersection(array) {
+      var result = [],
+      argsLength = arguments.length; // number of Arrays given, e.g. 2
+      // Note: array.length is the length of the FIRST array given!
+      for (var i = 0, length = array.length; i < length; i++) {
+          var item = array[i]; // iterate all items of the FIRST Array given
+         if (result.indexOf(item) > -1) continue; // if item is already in the result, continue
+         for (var j = 1; j < argsLength; j++) { // Now take the second, third, ... Array given
+              if (arguments[j].indexOf(item) === -1) break; // if item is not in the next Array, break
+          }
+          // The varialble j is not local to the loop, it is in the same scope the for loop is in!
+          if (j === argsLength) result.push(item); // If we assume we have 2 Arrays in the argument 'array' this works!
       }
-
-      else if (arrayA[ai] > arrayB[bi]) {
-        bi++;
-      }
-
-      else {
-        intersection.push(arrayA[ai]);
-        ai++;
-        bi++;
-      }
-    }
-
-    return intersection;
+     return result;
   }
+
 })();

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--<script src="../dist/typeahead.jquery.js"></script>-->
+
+    <script src="./ext/jquery-2.2.4.min.js"></script>
+    <script src="../dist/typeahead.bundle.js"></script>
+
+
+    <style>
+      .container {
+        width: 800px;
+        margin: 50px auto;
+      }
+
+      .typeahead-wrapper {
+        display: block;
+        margin: 50px 0;
+      }
+
+      .tt-dropdown-menu {
+        background-color: #fff;
+        border: 1px solid #000;
+      }
+
+      .tt-suggestion.tt-cursor {
+        background-color: #ccc;
+      }
+
+      .triggered-events {
+        float: right;
+        width: 500px;
+        height: 300px;
+      }
+    </style>
+  </head>
+
+  <body>
+
+
+    <form>
+      <input name="sName" id="search-text" type="text" autocomplete="off" />
+    </form>
+
+
+    <script>
+        var localData = [{"m":72,"id":8379,"l":"ST60","f":"Siemens ST60","i":"SiemensST60.jpg","s":"siemens-st60","q":171,"e":0,"r":""},{"m":72,"id":8380,"l":"SX1","f":"Siemens SX1","i":"SiemensSX1.jpg","s":"siemens-sx1","q":211,"e":0,"r":""},{"m":72,"id":8381,"l":"SXG75","f":"Siemens SXG75","i":"SiemensSXG75.jpg","s":"siemens-sxg75","q":326,"e":0,"r":""},{"m":72,"id":48564,"l":"Xelibri 5","f":"Siemens Xelibri 5","i":"Xelibri5.jpg","s":"siemens-xelibri-5","q":30,"e":0,"r":""},{"m":72,"id":48561,"l":"Xelibri 6","f":"Siemens Xelibri 6","i":"Xelibri6.jpg","s":"siemens-xelibri-6","q":30,"e":0,"r":""},{"m":72,"id":48563,"l":"Xelibri 7","f":"Siemens Xelibri 7","i":"Xelibri7.jpg","s":"siemens-xelibri-7","q":30,"e":0,"r":""},{"m":72,"id":48560,"l":"Xelibri 8","f":"Siemens Xelibri 8","i":"Xelibri8.jpg","s":"siemens-xelibri-8","q":39,"e":0,"r":""}];
+
+        var phones = new Bloodhound({
+            identify: function(obj) {return obj.id;},
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            datumTokenizer: function(d) {return Bloodhound.tokenizers.whitespace(d.f);},
+            local: localData
+        });
+
+        phones.initialize();
+
+        $("#search-text").typeahead({
+            highlight: false,
+            hint: false
+        }, {
+            name: "phones",
+            source: phones.ttAdapter(),
+            limit: 1000,
+            display: function() {
+                return $("#search-text").val()
+            },
+            templates: {
+                header: '<div>result</div>',
+                suggestion: function(data) {
+                    var tmpl = '<div>'+data.f+'</div>';
+                    return tmpl;
+                }
+            }
+        });
+
+    </script>
+
+  </body>
+</html>
